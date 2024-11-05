@@ -9,7 +9,7 @@ function! colortuner#init()
     autocmd ColorScheme,VimEnter * call colortuner#on_colorscheme()
     autocmd VimEnter * call colortuner#get_all_colorschemes()
     autocmd BufEnter __colortuner__ call colortuner#ui#setup()
-    autocmd VimLeave * call colortuner#save()
+    autocmd BufLeave __colortuner__ call colortuner#save()
   augroup END
 endfunction
 
@@ -24,7 +24,11 @@ function! colortuner#load()
 endfunction
 
 function! colortuner#save()
-  call writefile([string(s:settings)], expand(g:colortuner_filepath))
+  try
+    call writefile([string(s:settings)], expand(g:colortuner_filepath))
+  catch
+    echo "Error during colortuner#save " . v:exception
+  endtry
 endfunction
 
 function! colortuner#on_colorscheme()
